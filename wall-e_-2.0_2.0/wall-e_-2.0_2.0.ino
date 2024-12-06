@@ -18,7 +18,9 @@
 const int mode = 1; // 0 -> automatic, 1 -> manual
 
 // Create RF24 object:
-RF24 radio(12,11); // CE, CSN pins
+#define CE_PIN   A3  // Use A3 as CE (digital pins unavailable due to motor shield)
+#define CSN_PIN  A4  // Use A4 as CSN
+RF24 radio(CE_PIN,CSN_PIN); // CE, CSN pins
 
 // Assign address for module communication:
 const byte address[6] = "00001";
@@ -30,6 +32,7 @@ const int trigPin = A1;
 const int echoPin = A2;
 
 long duration;
+int distance;
 
 // Create structure to contain joystick readings:
 struct Data_Package{
@@ -138,7 +141,6 @@ void loop() {
     
   }
 
-
   // AUTOMATIC MODE:
   if (mode == 0)
   {
@@ -158,7 +160,7 @@ void loop() {
     // Read the echoPin and return the sound wave travel time in ms:
     duration = pulseIn(echoPin, HIGH);
     // Calculate the distance in cm:
-    int distance = duration * 0.034 / 2;
+    distance = duration * 0.034 / 2;
     // Print the distance:
     Serial.print("Distance: ");
     Serial.println(distance);
